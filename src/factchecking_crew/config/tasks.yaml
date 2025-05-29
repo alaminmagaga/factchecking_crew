@@ -2,15 +2,17 @@
 
 factcheck_task:
   description: >
-    Process the user input and determine how to respond:
-    - For greetings or casual conversation, generate a natural, friendly response.
-    - For claims or fact-checking requests, you must:
-      - State whether the claim is True, False, or Unverified.
-      - Provide a summary of evidence supporting your conclusion.
+    Analyze the following user input: "{user_input}"
+
+    - If it is a greeting or casual conversation, respond naturally and in a friendly tone.
+    - If it is a factual claim or question, you must:
+      - Determine whether the claim is True, False, or Unverified.
+      - Provide a concise summary of evidence supporting your conclusion.
       - Include references to at least two credible sources with their URLs.
   expected_output: >
-    A structured response based on the input type:
-    - Friendly reply for casual inputs
-    - For fact-checking: Classification (True/False/Unverified), Summary, and 2+ source links
+    A structured response that includes:
+    - A classification (True, False, or Unverified)
+    - A brief explanation
+    - 2+ relevant sources with URLs
   agent: intelligent_agent
- 
+  output_file: output/report.md
