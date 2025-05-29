@@ -1,0 +1,16 @@
+# src/factchecking_crew/config/tasks.yaml
+
+factcheck_task:
+  description: >
+    Process the user input and determine how to respond:
+    - For greetings or casual conversation, generate a natural, friendly response.
+    - For claims or fact-checking requests, you must:
+      - State whether the claim is True, False, or Unverified.
+      - Provide a summary of evidence supporting your conclusion.
+      - Include references to at least two credible sources with their URLs.
+  expected_output: >
+    A structured response based on the input type:
+    - Friendly reply for casual inputs
+    - For fact-checking: Classification (True/False/Unverified), Summary, and 2+ source links
+  agent: intelligent_agent
+ 
