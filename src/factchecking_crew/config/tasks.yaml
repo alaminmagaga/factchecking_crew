@@ -1,18 +1,39 @@
 # src/factchecking_crew/config/tasks.yaml
 
-factcheck_task:
+factcheck_analysis_task:
   description: >
     Analyze the following user input: "{user_input}"
-
-    - If it is a greeting or casual conversation, respond naturally and in a friendly tone.
+    
+    - If it is a greeting or casual conversation, respond naturally and warmly.
     - If it is a factual claim or question, you must:
-      - Determine whether the claim is True, False, or Unverified.
-      - Provide a concise summary of evidence supporting your conclusion.
-      - Include references to at least two credible sources with their URLs.
+      - Classify the claim as True, False, Misleading, or Unverified
+      - Provide a concise 2-3 sentence explanation of your reasoning
+      - DO NOT include any URLs or source citations in your response
+      - End your response by stating that supporting sources will follow from the research assistant
   expected_output: >
-    A structured response that includes:
-    - A classification (True, False, or Unverified)
-    - A brief explanation
-    - 2+ relevant sources with URLs
+    A conversational response that includes:
+    - Natural greeting response OR factual analysis
+    - For claims: Classification (True/False/Misleading/Unverified) + brief explanation
+    - NO URLs or source citations
+    - Clear handoff statement for source collection
   agent: intelligent_agent
-  output_file: output/report.md
+  output_file: output/analysis_report.md
+
+source_collection_task:
+  description: >
+    Based on the claim analyzed in the previous task about: "{user_input}"
+    
+    Search for and compile credible sources that relate to the analyzed topic:
+    - Find 3-5 authoritative sources (government, academic, established media, expert organizations)
+    - Focus on recent sources when possible (within 2 years)
+    - Ensure sources directly support or refute the analyzed claim
+    - Present only as clean title-URL pairs
+    - Do not repeat the analysis or add commentary
+  expected_output: >
+    A formatted list of sources containing:
+    - 3-5 credible source citations
+    - Format: "Title - URL" for each source
+    - No additional analysis or commentary
+    - Sources from authoritative publications only
+  agent: link_collector_agent
+  output_file: output/sources_report.md

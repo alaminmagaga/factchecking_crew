@@ -1,37 +1,54 @@
-# src/factchecking_crew/crewai.py
-
-import os
 from crewai import Agent, Crew, Process, Task
-from crewai_tools import SerperDevTool
 from crewai.project import CrewBase, agent, crew, task
+
+# Uncomment the following line to use an example of a custom tool
+# from factchecking_crew.tools.custom_tool import MyCustomTool
+
+# Check our tools documentations for more information on how to use them
+# from crewai_tools import SerperDevTool
 
 @CrewBase
 class FactcheckingCrew():
-	"""FactcheckingCrew: single-agent, fact-checking assistant"""
+	"""FactcheckingCrew crew"""
 
 	agents_config = 'config/agents.yaml'
 	tasks_config = 'config/tasks.yaml'
 
 	@agent
-	def intelligent_agent(self) -> Agent:
+	def researcher(self) -> Agent:
 		return Agent(
-			config=self.agents_config['intelligent_agent'],
-			tools=[SerperDevTool()],
+			config=self.agents_config['researcher'],
+			# tools=[MyCustomTool()], # Example of custom tool, loaded on the beginning of file
+			verbose=True
+		)
+
+	@agent
+	def reporting_analyst(self) -> Agent:
+		return Agent(
+			config=self.agents_config['reporting_analyst'],
 			verbose=True
 		)
 
 	@task
-	def factcheck_task(self) -> Task:
+	def research_task(self) -> Task:
 		return Task(
-			config=self.tasks_config['factcheck_task']
+			config=self.tasks_config['research_task'],
+		)
+
+	@task
+	def reporting_task(self) -> Task:
+		return Task(
+			config=self.tasks_config['reporting_task'],
+			output_file='report.md'
 		)
 
 	@crew
 	def crew(self) -> Crew:
-		"""Creates the FactcheckingCrew"""
+		"""Creates the FactcheckingCrew crew"""
 		return Crew(
-			agents=self.agents,
-			tasks=self.tasks,
+			agents=self.agents, # Automatically created by the @agent decorator
+			tasks=self.tasks, # Automatically created by the @task decorator
 			process=Process.sequential,
-			verbose=True
+			verbose=True,
+			# process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
 		)
