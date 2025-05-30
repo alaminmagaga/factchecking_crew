@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+
 # src/factchecking_crew/main.py
 
 import os

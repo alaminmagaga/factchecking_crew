@@ -2,11 +2,6 @@ from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from crewai_tools import SerperDevTool 
 
-# Uncomment the following line to use an example of a custom tool
-# from factchecking_crew.tools.custom_tool import MyCustomTool
-
-# Check our tools documentations for more information on how to use them
-# from crewai_tools import SerperDevTool
 
 @CrewBase
 class FactcheckingCrew():
