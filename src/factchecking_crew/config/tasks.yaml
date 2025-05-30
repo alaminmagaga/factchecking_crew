@@ -37,3 +37,5 @@ source_collection_task:
     - Sources from authoritative publications only
   agent: link_collector_agent
   output_file: output/sources_report.md
+  # context:
+  #     - reporting_task
