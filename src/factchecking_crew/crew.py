@@ -1,50 +1,38 @@
+# src/factchecking_crew/crewai.py
+
+import os
 from crewai import Agent, Crew, Process, Task
+from crewai_tools import SerperDevTool
 from crewai.project import CrewBase, agent, crew, task
-from crewai_tools import SerperDevTool 
 
 
 @CrewBase
-class FactcheckingCrew():
-	"""FactcheckingCrew crew"""
+class FactcheckingCrew:
+    """Crew for conversational and fact-checking tasks"""
 
-	agents_config = 'config/agents.yaml'
-	tasks_config = 'config/tasks.yaml'
+    agents_config = 'config/agents.yaml'
+    tasks_config = 'config/tasks.yaml'
 
-	@agent
-	def researcher(self) -> Agent:
-		return Agent(
-			config=self.agents_config['researcher'],
-			tools=[SerperDevTool()], # Example of custom tool, loaded on the beginning of file
-			verbose=True
-		)
+    @agent
+    def intelligent_agent(self) -> Agent:
+        return Agent(
+            config=self.agents_config['intelligent_agent'],
+            tools=[SerperDevTool()],
+            verbose=True
+        )
 
-	@agent
-	def reporting_analyst(self) -> Agent:
-		return Agent(
-			config=self.agents_config['reporting_analyst'],
-			verbose=True
-		)
+    @task
+    def factcheck_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['factcheck_task'],
+            output_file='output/report.md'
+        )
 
-	@task
-	def research_task(self) -> Task:
-		return Task(
-			config=self.tasks_config['research_task'],
-		)
-
-	@task
-	def reporting_task(self) -> Task:
-		return Task(
-			config=self.tasks_config['reporting_task'],
-			output_file='report.md'
-		)
-
-	@crew
-	def crew(self) -> Crew:
-		"""Creates the FactcheckingCrew crew"""
-		return Crew(
-			agents=self.agents, # Automatically created by the @agent decorator
-			tasks=self.tasks, # Automatically created by the @task decorator
-			process=Process.sequential,
-			verbose=True,
-			# process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
-		)
+    @crew
+    def crew(self) -> Crew:
+        return Crew(
+            agents=[self.intelligent_agent],
+            tasks=[self.factcheck_task],
+            process=Process.sequential,
+            verbose=True
+        )
